@@ -8,14 +8,18 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final CustomMetrics customMetrics;
+
 
     @Autowired
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, CustomMetrics customMetrics) {
         this.userRepository = userRepository;
+        this.customMetrics = customMetrics;
     }
 
     @PostMapping
     public User createUser(@RequestBody User user) {
+        customMetrics.incrementUserCreationCounter();
         return userRepository.save(user);
     }
 
